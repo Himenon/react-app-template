@@ -1,0 +1,4 @@
+{
+  "*.{ts,tsx}": ["yarn run format", "yarn run lint", "git add"],
+  "package.json": ["sort-package-json", "git add"]
+}
