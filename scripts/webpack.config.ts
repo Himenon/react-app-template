@@ -74,7 +74,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       minimizer: [new TerserPlugin(), new OptimizeCssAssetsPlugin()],
     },
     entry: {
-      application: "./src/index.tsx",
+      application: ["core-js", "regenerator-runtime/runtime", "./src/index.tsx"],
     },
     devtool: "cheap-source-map",
     devServer: {
