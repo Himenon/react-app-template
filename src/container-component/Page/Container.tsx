@@ -2,9 +2,9 @@ import * as Domain from "@app/domain";
 import * as React from "react";
 import * as Counter from "../Counter";
 import { generateStore, Store } from "./Store";
-import { CounterPage } from "@app/view-component";
+import { Page } from "@app/view-component";
 
-const generateProps = (stores: Domain.Stores, store: Store): CounterPage.Props => {
+const generateProps = (stores: Domain.Stores, store: Store): Page.Props => {
   return {
     heading: {
       children: "Counter",
@@ -19,5 +19,5 @@ export const Container = ({ reducers }: { reducers: Domain.Reducers }) => {
     app: createReducer(React.useReducer(...reducers.app)),
   };
   const viewStore = generateStore(domainStores);
-  return <CounterPage.Component {...generateProps(domainStores, viewStore)} />;
+  return <Page.Component {...generateProps(domainStores, viewStore)} />;
 };

@@ -1,5 +1,5 @@
 import * as Counter from "./Counter";
 export { Counter };
 
-import * as CounterPage from "./CounterPage";
-export { CounterPage };
+import * as Page from "./Page";
+export { Page };

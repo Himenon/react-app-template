@@ -36,6 +36,8 @@
     }
   },
   "dependencies": {
+    "@primer/components": "^15.1.1",
+    "@primer/css": "^13.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   },
@@ -89,6 +91,7 @@
     "serve": "^11.2.0",
     "sort-package-json": "^1.23.1",
     "style-loader": "^1.0.0",
+    "styled-components": "^4.4.1",
     "terser-webpack-plugin": "^2.2.1",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",

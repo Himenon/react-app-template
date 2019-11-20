@@ -29,6 +29,6 @@
       "@app/infra": ["./src/infra/index.ts"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "scripts/*.ts", "scripts/push-tag.js"],
-  "exclude": ["node_modules", "ts-lib"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

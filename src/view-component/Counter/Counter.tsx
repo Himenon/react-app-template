@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ButtonProps, ButtonPrimary, Text, TextProps, Box } from "@primer/components";
 
 interface ClassNames {
   counter?: string;
@@ -9,15 +10,17 @@ interface ClassNames {
 const styles: ClassNames = require("./counter.scss");
 
 interface CounterProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  display: JSX.IntrinsicElements["p"];
-  button: JSX.IntrinsicElements["button"];
+  display: TextProps;
+  button: ButtonProps;
 }
 
 const Counter = ({ display, button, ...props }: CounterProps) => {
   return (
     <div className={styles.counter} {...props}>
-      <p className={styles.display} {...display} />
-      <button className={styles.button} {...button} />
+      <Box>
+        <Text className={styles.display} {...display} />
+      </Box>
+      <ButtonPrimary className={styles.button} {...button} />
     </div>
   );
 };
