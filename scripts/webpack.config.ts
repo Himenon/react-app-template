@@ -6,6 +6,7 @@ import * as ManifestPlugin from "webpack-manifest-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserPlugin from "terser-webpack-plugin";
 import * as OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const WebpackNotifierPlugin = require("webpack-notifier");
@@ -71,7 +72,16 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
     optimization: {
       minimize: isProduction,
       runtimeChunk: false,
-      minimizer: [new TerserPlugin(), new OptimizeCssAssetsPlugin()],
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+        new OptimizeCssAssetsPlugin(),
+      ],
     },
     entry: {
       application: ["core-js", "regenerator-runtime/runtime", "./src/index.tsx"],
@@ -81,6 +91,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       contentBase: "./dist",
     },
     plugins: [
+      isProduction && new BundleAnalyzerPlugin(),
       new ProgressBarPlugin(),
       new FriendlyErrorsWebpackPlugin(),
       new WebpackNotifierPlugin(),
@@ -103,6 +114,10 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       filename: "[name].bundle.js",
       path: path.resolve(__dirname, "../dist"),
     },
+    externals: {
+      react: "React",
+      "react-dom": "ReactDOM",
+    },
     resolve: {
       extensions: [".js", ".ts", ".tsx", ".scss", ".json"],
       alias: {
@@ -110,6 +125,8 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
         "@app/container": appPath("./src/container/index.ts"),
         "@app/domain": appPath("./src/domain/index.ts"),
         "@app/infra": appPath("./src/infra/index.ts"),
+        React: appPath("node_modules/react"),
+        ReactDOM: appPath("node_modules/react-dom"),
       },
     },
     module: {
