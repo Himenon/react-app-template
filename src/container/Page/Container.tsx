@@ -2,7 +2,7 @@ import * as Domain from "@app/domain";
 import * as React from "react";
 import * as Counter from "../Counter";
 import { generateStore, Store } from "./Store";
-import { Page } from "@app/view-component";
+import { Page } from "@app/component";
 
 const generateProps = (stores: Domain.Stores, store: Store): Page.Props => {
   return {

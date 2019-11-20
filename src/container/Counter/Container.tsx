@@ -1,4 +1,4 @@
-import { Counter } from "@app/view-component";
+import { Counter } from "src/component";
 import { Store } from "./Store";
 
 export const generateProps = (store: Store): Counter.Props => {

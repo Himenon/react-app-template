@@ -23,8 +23,8 @@
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@app/view-component": ["./src/view-component/index.ts"],
-      "@app/container-component": ["./src/container-component/index.ts"],
+      "@app/component": ["src/component/index.ts"],
+      "@app/container": ["./src/container/index.ts"],
       "@app/domain": ["./src/domain/index.ts"],
       "@app/infra": ["./src/infra/index.ts"]
     }
