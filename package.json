@@ -11,6 +11,8 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production ts-node -P ./scripts/tsconfig.cli.json ./scripts/build.ts",
     "commit": "npx git-cz",
+    "depcruise": "depcruise --validate .dependency-cruiser.js src",
+    "depcruise:html": "depcruise --validate --output-type err-html -f dependency-report.html .dependency-cruiser.js src",
     "deploy": "yarn build && yarn publish:site",
     "format": "yarn lint --fix && prettier --write \"**/*.{ts,tsx,js,jsx,json,yml,yaml,html,md}\"",
     "lint": "eslint -c ./.eslintrc.js 'src/**/*.{ts,tsx}'",
@@ -19,7 +21,7 @@
     "publish:site": "ts-node -P ./scripts/tsconfig.cli.json ./scripts/publish.ts",
     "serve": "serve dist",
     "start": "cross-env NODE_ENV=development ts-node -P ./scripts/tsconfig.cli.json ./scripts/develop.ts",
-    "test": "yarn test:jest",
+    "test": "yarn test:jest && yarn depcruise",
     "test:jest": "jest -c ./jest.config.json",
     "test:jest:watch": "yarn test:jest --watch",
     "version_up": "lerna version --yes"
@@ -65,6 +67,7 @@
     "core-js": "3",
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
+    "dependency-cruiser": "^5.3.2",
     "eslint": "^6.6.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-prettier": "^3.1.1",
