@@ -1,7 +1,6 @@
 import * as Domain from "@app/domain";
 import * as React from "react";
 import { Page } from "./container";
-import "./style.scss";
 
 interface AppProps {
   reducers: Domain.Reducers;

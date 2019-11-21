@@ -8,7 +8,7 @@ interface ClassNames {
   counter?: string;
 }
 
-const styles: ClassNames = require("./page.scss");
+const styles: ClassNames = require("./counter_page.scss");
 
 interface TemplateProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   counter: Counter.Props;
