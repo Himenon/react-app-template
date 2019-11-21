@@ -1,6 +1,6 @@
 import * as Domain from "@app/domain";
 import * as React from "react";
-import { CounterPage } from "./container-component";
+import { Page } from "./container";
 import "./style.scss";
 
 interface AppProps {
@@ -8,7 +8,7 @@ interface AppProps {
 }
 
 export const App = ({ reducers }: AppProps) => {
-  return <CounterPage.Container reducers={reducers} />;
+  return <Page.Container reducers={reducers} />;
 };
 
 export { AppProps as Props, App as Container };

@@ -6,6 +6,7 @@ import * as ManifestPlugin from "webpack-manifest-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserPlugin from "terser-webpack-plugin";
 import * as OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const WebpackNotifierPlugin = require("webpack-notifier");
@@ -17,6 +18,7 @@ const rootPath = path.resolve(__dirname, "../");
 const appPath = (nextPath: string) => path.join(rootPath, nextPath);
 
 export const generateConfig = (isProduction: boolean): webpack.Configuration => {
+  const isCI = process.env.CI;
   const tsLoader: webpack.RuleSetUse = {
     loader: "ts-loader",
     options: {
@@ -71,7 +73,54 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
     optimization: {
       minimize: isProduction,
       runtimeChunk: false,
-      minimizer: [new TerserPlugin(), new OptimizeCssAssetsPlugin()],
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+        new OptimizeCssAssetsPlugin({
+          assetNameRegExp: /\.optimize\.css$/g,
+          cssProcessor: require("cssnano"),
+          cssProcessorPluginOptions: {
+            preset: ["default", { discardComments: { removeAll: true } }],
+          },
+          canPrint: true,
+        }),
+      ],
+      splitChunks: {
+        chunks: "initial",
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          lib: {
+            name: "lib",
+            chunks: "initial",
+            filename: "scripts/lib.[chunkhash:10].js",
+            minChunks: 2,
+            test: ({ resource: filePath, context: dirPath }, chunk) => {
+              return [/src/].some(pattern => pattern.test(filePath));
+            },
+            enforce: true,
+          },
+          vendor: {
+            name: "vendor",
+            chunks: "initial",
+            filename: "scripts/vendor.[chunkhash:10].js",
+            test: /node_modules/,
+            enforce: true,
+          },
+          styles: {
+            name: "styles",
+            filename: "scripts/styles.[chunkhash:10].js",
+            test: /\.scss$/,
+            chunks: "all",
+            enforce: true,
+          },
+        },
+      },
     },
     entry: {
       application: ["core-js", "regenerator-runtime/runtime", "./src/index.tsx"],
@@ -81,6 +130,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       contentBase: "./dist",
     },
     plugins: [
+      isProduction && !isCI && new BundleAnalyzerPlugin(),
       new ProgressBarPlugin(),
       new FriendlyErrorsWebpackPlugin(),
       new WebpackNotifierPlugin(),
@@ -90,8 +140,8 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       new CleanWebpackPlugin(),
       isProduction &&
         new MiniCssExtractPlugin({
-          filename: "[name].[contenthash:8].css",
-          chunkFilename: "[name].[contenthash:8].chunk.css",
+          filename: "stylesheets/[name].[contenthash:8].css",
+          chunkFilename: "stylesheets/[name].[contenthash:8].chunk.css",
         }),
       new HtmlWebpackPlugin({
         title: isProduction ? "Production" : "Development",
@@ -100,16 +150,22 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       new ManifestPlugin(),
     ].filter(Boolean),
     output: {
-      filename: "[name].bundle.js",
+      filename: "scripts/[name].bundle.js",
       path: path.resolve(__dirname, "../dist"),
+    },
+    externals: {
+      react: "React",
+      "react-dom": "ReactDOM",
     },
     resolve: {
       extensions: [".js", ".ts", ".tsx", ".scss", ".json"],
       alias: {
-        "@app/view-component": appPath("./src/view-component/index.ts"),
-        "@app/container-component": appPath("./src/container-component/index.ts"),
+        "@app/component": appPath("./src/component/index.ts"),
+        "@app/container": appPath("./src/container/index.ts"),
         "@app/domain": appPath("./src/domain/index.ts"),
         "@app/infra": appPath("./src/infra/index.ts"),
+        React: appPath("node_modules/react"),
+        ReactDOM: appPath("node_modules/react-dom"),
       },
     },
     module: {

@@ -23,12 +23,12 @@
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@app/view-component": ["./src/view-component/index.ts"],
-      "@app/container-component": ["./src/container-component/index.ts"],
+      "@app/component": ["src/component/index.ts"],
+      "@app/container": ["./src/container/index.ts"],
       "@app/domain": ["./src/domain/index.ts"],
       "@app/infra": ["./src/infra/index.ts"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "scripts/*.ts", "scripts/push-tag.js"],
-  "exclude": ["node_modules", "ts-lib"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
