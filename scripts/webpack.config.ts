@@ -18,6 +18,7 @@ const rootPath = path.resolve(__dirname, "../");
 const appPath = (nextPath: string) => path.join(rootPath, nextPath);
 
 export const generateConfig = (isProduction: boolean): webpack.Configuration => {
+  const isCI = process.env.CI;
   const tsLoader: webpack.RuleSetUse = {
     loader: "ts-loader",
     options: {
@@ -129,7 +130,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       contentBase: "./dist",
     },
     plugins: [
-      isProduction && new BundleAnalyzerPlugin(),
+      isProduction && !isCI && new BundleAnalyzerPlugin(),
       new ProgressBarPlugin(),
       new FriendlyErrorsWebpackPlugin(),
       new WebpackNotifierPlugin(),
