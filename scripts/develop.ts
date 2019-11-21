@@ -9,6 +9,7 @@ const main = async () => {
   const server = new webpackDevServer(compiler, {
     hot: true,
     open: true,
+    historyApiFallback: true,
   });
   server.listen(9000);
 };

@@ -26,7 +26,8 @@
       "@app/component": ["src/component/index.ts"],
       "@app/container": ["./src/container/index.ts"],
       "@app/domain": ["./src/domain/index.ts"],
-      "@app/infra": ["./src/infra/index.ts"]
+      "@app/infra": ["./src/infra/index.ts"],
+      "@app/style": ["./src/style/index.ts"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
