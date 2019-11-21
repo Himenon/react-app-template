@@ -80,8 +80,46 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
             },
           },
         }),
-        new OptimizeCssAssetsPlugin(),
+        new OptimizeCssAssetsPlugin({
+          assetNameRegExp: /\.optimize\.css$/g,
+          cssProcessor: require("cssnano"),
+          cssProcessorPluginOptions: {
+            preset: ["default", { discardComments: { removeAll: true } }],
+          },
+          canPrint: true,
+        }),
       ],
+      splitChunks: {
+        chunks: "initial",
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          lib: {
+            name: "lib",
+            chunks: "initial",
+            filename: "scripts/lib.[chunkhash:10].js",
+            minChunks: 2,
+            test: ({ resource: filePath, context: dirPath }, chunk) => {
+              return [/src/].some(pattern => pattern.test(filePath));
+            },
+            enforce: true,
+          },
+          vendor: {
+            name: "vendor",
+            chunks: "initial",
+            filename: "scripts/vendor.[chunkhash:10].js",
+            test: /node_modules/,
+            enforce: true,
+          },
+          styles: {
+            name: "styles",
+            filename: "scripts/styles.[chunkhash:10].js",
+            test: /\.scss$/,
+            chunks: "all",
+            enforce: true,
+          },
+        },
+      },
     },
     entry: {
       application: ["core-js", "regenerator-runtime/runtime", "./src/index.tsx"],
@@ -101,8 +139,8 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       new CleanWebpackPlugin(),
       isProduction &&
         new MiniCssExtractPlugin({
-          filename: "[name].[contenthash:8].css",
-          chunkFilename: "[name].[contenthash:8].chunk.css",
+          filename: "stylesheets/[name].[contenthash:8].css",
+          chunkFilename: "stylesheets/[name].[contenthash:8].chunk.css",
         }),
       new HtmlWebpackPlugin({
         title: isProduction ? "Production" : "Development",
@@ -111,7 +149,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       new ManifestPlugin(),
     ].filter(Boolean),
     output: {
-      filename: "[name].bundle.js",
+      filename: "scripts/[name].bundle.js",
       path: path.resolve(__dirname, "../dist"),
     },
     externals: {
