@@ -2,10 +2,10 @@
   "name": "tiny-react-app-template",
   "version": "0.1.0",
   "homepage": "https://github.com/Himenon/tiny-react-app-template#readme",
-  "bugs": "https://github.com/Himenon/recursive-add-prefix/issues",
+  "bugs": "https://github.com/Himenon/tiny-react-app-template/issues",
   "repository": {
     "type": "git",
-    "url": "git@github.com:/tiny.git"
+    "url": "git@github.com:Himenon/tiny-react-app-template.git"
   },
   "license": "MIT",
   "scripts": {
