@@ -1,6 +1,6 @@
-import * as webpack from "webpack";
+import webpack from "webpack";
 import { generateConfig } from "./webpack.config";
-import * as webpackDevServer from "webpack-dev-server";
+import webpackDevServer from "webpack-dev-server";
 
 const main = async () => {
   const isProduction = process.env.NODE_ENV === "production";

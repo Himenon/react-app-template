@@ -1,11 +1,11 @@
-import * as webpack from "webpack";
+import webpack from "webpack";
 import * as path from "path";
-import * as HtmlWebpackPlugin from "html-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import * as ManifestPlugin from "webpack-manifest-plugin";
-import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
-import * as TerserPlugin from "terser-webpack-plugin";
-import * as OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import ManifestPlugin from "webpack-manifest-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
