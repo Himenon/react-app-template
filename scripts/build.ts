@@ -5,12 +5,12 @@ const main = async () => {
   const isProduction = process.env.NODE_ENV === "production";
   const config = generateConfig(isProduction);
   const compiler = webpack(config);
-  compiler.run(err => {
+  compiler.run((err) => {
     console.error(err);
   });
 };
 
-main().catch(e => {
+main().catch((e) => {
   if (e && e.message) {
     console.error(e.message);
   }

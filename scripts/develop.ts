@@ -14,7 +14,7 @@ const main = async () => {
   server.listen(9000);
 };
 
-main().catch(e => {
+main().catch((e) => {
   if (e && e.message) {
     console.error(e.message);
   }
