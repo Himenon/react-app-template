@@ -2,6 +2,7 @@
 import * as path from "path";
 
 import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import CopyPlugin from "copy-webpack-plugin";
 import express from "express";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
@@ -134,11 +135,11 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       historyApiFallback: true,
       before: (app: express.Application, _server: any) => {
         app.use(
-          "/scripts/react.js",
+          isProduction ? "/scripts/react.production.min.js" : "/scripts/react.development.js",
           express.static(find(isProduction ? "react/umd/react.production.min.js" : "react/umd/react.development.js")),
         );
         app.use(
-          "/scripts/react-dom.js",
+          isProduction ? "scripts/react-dom.production.min.js" : "scripts/react-dom.development.js",
           express.static(find(isProduction ? "react-dom/umd/react-dom.production.min.js" : "react-dom/umd/react-dom.development.js")),
         );
       },
@@ -163,10 +164,16 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       new HtmlWebpackPlugin({
         title: pkg.name,
         template: "public/index.html",
-        React: "/scripts/react.js",
-        ReactDOM: "/scripts/react-dom.js",
+        React: isProduction ? "scripts/react.production.min.js" : "scripts/react.development.js",
+        ReactDOM: isProduction ? "scripts/react-dom.production.min.js" : "scripts/react-dom.development.js",
       }),
       new ManifestPlugin(),
+      new CopyPlugin({
+        patterns: [
+          { from: find("react/umd/react.production.min.js"), to: "scripts" },
+          { from: find("react-dom/umd/react-dom.production.min.js"), to: "scripts" },
+        ],
+      }),
     ].filter(Boolean),
     output: {
       filename: "scripts/[name].bundle.js",
