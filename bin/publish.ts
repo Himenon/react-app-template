@@ -1,9 +1,10 @@
-import * as ghpages from "gh-pages";
 import * as path from "path";
+
+import * as ghpages from "gh-pages";
 
 const packageJson = require(path.join(__dirname, "../package.json"));
 
-export const publish = async (distPath: string) => {
+export const publish = async (distPath: string): Promise<void> => {
   console.log("Start deploy to github pages.");
   const url = packageJson.repository.url;
   const homepage = packageJson.homepage;

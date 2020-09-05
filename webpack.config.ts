@@ -1,21 +1,33 @@
-import webpack from "webpack";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as path from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import { CleanWebpackPlugin } from "clean-webpack-plugin";
-import ManifestPlugin from "webpack-manifest-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import TerserPlugin from "terser-webpack-plugin";
-import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
-import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 
-const ProgressBarPlugin = require("progress-bar-webpack-plugin");
-const WebpackNotifierPlugin = require("webpack-notifier");
+import { CleanWebpackPlugin } from "clean-webpack-plugin";
+import express from "express";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import resolvePkg from "resolve-pkg";
+import TerserPlugin from "terser-webpack-plugin";
+import webpack from "webpack";
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import ManifestPlugin from "webpack-manifest-plugin";
+
 const ForkTsCheckerNotifierWebpackPlugin = require("fork-ts-checker-notifier-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 
-const rootPath = path.resolve(__dirname, "../");
+const rootPath = path.resolve(__dirname, "./");
 const appPath = (nextPath: string) => path.join(rootPath, nextPath);
+
+const pkg = require("./package.json");
+
+const find = (inputPath: string) => {
+  const result = resolvePkg(inputPath);
+  if (!result) {
+    throw new Error(`Not found: ${inputPath}`);
+  }
+  return result;
+};
 
 export const generateConfig = (isProduction: boolean): webpack.Configuration => {
   const isCI = process.env.CI;
@@ -41,9 +53,6 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
       options: {
         localsConvention: "camelCase",
         importLoaders: 2,
-        modules: {
-          localIdentName: "___[local]___[hash:base64:5]",
-        },
       },
     },
     {
@@ -110,27 +119,38 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
             test: /node_modules/,
             enforce: true,
           },
-          styles: {
-            name: "styles",
-            test: /\.scss$/,
-            chunks: "all",
-            enforce: true,
-          },
         },
       },
     },
     entry: {
-      application: ["core-js", "regenerator-runtime/runtime", "./src/index.tsx"],
+      application: ["core-js", "regenerator-runtime/runtime", isProduction ? "./src/application.tsx" : "./src/develop.tsx"],
     },
-    devtool: "cheap-source-map",
+    // @ts-ignore
     devServer: {
-      contentBase: "./dist",
+      contentBase: appPath("dist"),
+      compress: true,
+      port: 9000,
+      open: true,
+      historyApiFallback: true,
+      before: (app: express.Application, _server: any) => {
+        app.use(
+          "/scripts/react.js",
+          express.static(find(isProduction ? "react/umd/react.production.min.js" : "react/umd/react.development.js")),
+        );
+        app.use(
+          "/scripts/react-dom.js",
+          express.static(find(isProduction ? "react-dom/umd/react-dom.production.min.js" : "react-dom/umd/react-dom.development.js")),
+        );
+      },
     },
+    devtool: isProduction ? "cheap-source-map" : "inline-source-map",
     plugins: [
-      isProduction && !isCI && new BundleAnalyzerPlugin(),
-      new ProgressBarPlugin(),
+      isProduction &&
+        !isCI &&
+        new BundleAnalyzerPlugin({
+          analyzerMode: "disabled",
+        }),
       new FriendlyErrorsWebpackPlugin(),
-      new WebpackNotifierPlugin(),
       new ForkTsCheckerWebpackPlugin(),
       new ForkTsCheckerNotifierWebpackPlugin({ excludeWarnings: true }),
       new webpack.HotModuleReplacementPlugin(),
@@ -141,14 +161,16 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
           chunkFilename: "stylesheets/[name].[contenthash:8].chunk.css",
         }),
       new HtmlWebpackPlugin({
-        title: isProduction ? "Production" : "Development",
+        title: pkg.name,
         template: "public/index.html",
+        React: "/scripts/react.js",
+        ReactDOM: "/scripts/react-dom.js",
       }),
       new ManifestPlugin(),
     ].filter(Boolean),
     output: {
       filename: "scripts/[name].bundle.js",
-      path: path.resolve(__dirname, "../dist"),
+      path: appPath("dist"),
     },
     externals: {
       react: "React",
@@ -157,11 +179,6 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
     resolve: {
       extensions: [".js", ".ts", ".tsx", ".scss", ".json"],
       alias: {
-        "@app/component": appPath("./src/component/index.ts"),
-        "@app/container": appPath("./src/container/index.ts"),
-        "@app/domain": appPath("./src/domain/index.ts"),
-        "@app/infra": appPath("./src/infra/index.ts"),
-        "@app/style": appPath("./src/style/index.ts"),
         React: appPath("node_modules/react"),
         ReactDOM: appPath("node_modules/react-dom"),
       },
@@ -178,6 +195,16 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
           loaders: [isProduction ? MiniCssExtractPlugin.loader : "style-loader", ...cssLoaders].filter(Boolean) as webpack.RuleSetUse,
         },
         {
+          test: /ReactToastify.css|quill.snow.css/,
+          use: [
+            "style-loader",
+            {
+              loader: "css-loader",
+              options: { url: false },
+            },
+          ],
+        },
+        {
           test: /\.js$/,
           loader: babelLoader,
         },
@@ -185,3 +212,5 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
     },
   };
 };
+
+export default generateConfig(process.env.NODE_ENV === "production");

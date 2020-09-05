@@ -1,9 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { AppRouter } from "./router";
 
-const initialize = () => {
-  ReactDOM.render(<AppRouter />, document.getElementById("root"));
+const Component = () => {
+  return (
+    <div>
+      <p>Hello world!</p>
+    </div>
+  );
 };
 
-initialize();
+export const initialize = (): void => {
+  ReactDOM.render(<Component />, document.getElementById("root"));
+};
