@@ -1,34 +1,11 @@
-# tiny-react-app-template
+# @himenon/react-app-template
 
-## Start Development
+## Usage
 
 ```bash
+git clone https://github.com/Himenon/react-app-template
+cd react-app-template
 yarn
-yarn start # start debug server
-```
-
-## Build
-
-```bash
-yarn run build
-```
-
-### Release
-
-```bash
-yarn run deploy # default release: github pages
-```
-
-### Run server
-
-```bash
-yarn run serve
-```
-
-## Code Format
-
-```bash
-yarn run format
 ```
 
 ## License

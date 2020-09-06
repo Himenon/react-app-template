@@ -1,6 +1,7 @@
 {
   "name": "@himenon/react-app-template",
   "version": "0.1.0",
+  "private": true,
   "homepage": "https://github.com/Himenon/react-app-template#readme",
   "bugs": "https://github.com/Himenon/react-app-template/issues",
   "repository": {
@@ -18,7 +19,6 @@
     "postinstall": "yarn-deduplicate --strategy highest",
     "lint": "eslint -c ./.eslintrc.js 'src/**/*.{ts,tsx}'",
     "lint:fix": "yarn lint --fix",
-    "prettier": "prettier --config .prettierrc --write src/**/*",
     "publish:site": "ts-node -P ./scripts/tsconfig.cli.json ./scripts/publish.ts",
     "serve": "serve dist",
     "start": "yarn webpack:dev",
@@ -42,12 +42,10 @@
     }
   },
   "resolutions": {
-    "@types/webpack": "4.41.18",
+    "@types/webpack": "4.41.20",
     "@types/webpack-dev-server": "3.11.0"
   },
   "dependencies": {
-    "@primer/components": "20.0.0",
-    "@primer/css": "15.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-router-dom": "5.2.0"
@@ -58,7 +56,7 @@
     "@commitlint/cli": "9.1.2",
     "@commitlint/config-conventional": "9.1.2",
     "@types/clean-webpack-plugin": "0.1.3",
-    "@types/copy-webpack-plugin": "^6.0.0",
+    "@types/copy-webpack-plugin": "6.0.0",
     "@types/gh-pages": "3.0.0",
     "@types/html-webpack-plugin": "3.2.3",
     "@types/jest": "26.0.13",
@@ -67,7 +65,7 @@
     "@types/react-dom": "16.9.8",
     "@types/react-router-dom": "5.1.5",
     "@types/resolve-pkg": "2.0.0",
-    "@types/webpack": "4.41.22",
+    "@types/webpack": "4.41.20",
     "@types/webpack-dev-server": "3.11.0",
     "@typescript-eslint/eslint-plugin": "4.0.1",
     "@typescript-eslint/parser": "4.0.1",
@@ -76,7 +74,7 @@
     "clean-webpack-plugin": "3.0.0",
     "commitizen": "4.2.1",
     "conventional-changelog-angular-all": "1.7.0",
-    "copy-webpack-plugin": "^6.1.0",
+    "copy-webpack-plugin": "6.1.0",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
     "css-loader": "4.2.2",
