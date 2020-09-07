@@ -139,7 +139,7 @@ export const generateConfig = (isProduction: boolean): webpack.Configuration => 
           express.static(find(isProduction ? "react/umd/react.production.min.js" : "react/umd/react.development.js")),
         );
         app.use(
-          isProduction ? "scripts/react-dom.production.min.js" : "scripts/react-dom.development.js",
+          isProduction ? "/scripts/react-dom.production.min.js" : "/scripts/react-dom.development.js",
           express.static(find(isProduction ? "react-dom/umd/react-dom.production.min.js" : "react-dom/umd/react-dom.development.js")),
         );
       },
